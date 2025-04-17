@@ -30,7 +30,7 @@ dependencies = [
     "pandas",
     "rasterio",
     "scipy",
-    "sklearn",
+    "scikit-learn",
     "torch",
     "supervision"
 ]

@@ -28,13 +28,11 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
-    "pickle",
     "rasterio",
     "scipy",
     "sklearn",
     "torch",
-    "supervision",
-    "xml"
+    "supervision"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

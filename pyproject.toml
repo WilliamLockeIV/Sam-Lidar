@@ -25,6 +25,7 @@ keywords = ["ITC", "Individual Tree Crown", "Delineation", "Lidar"]
 dependencies = [
     "geopandas",
     "laspy",
+    "lazrs",
     "matplotlib",
     "numpy",
     "pandas",

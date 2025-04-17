@@ -27,7 +27,6 @@ dependencies = [
     "laspy",
     "matplotlib",
     "numpy",
-    "os",
     "pandas",
     "pickle",
     "rasterio",

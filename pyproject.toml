@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sam-lidar"
+description = "Leveraging SAM 2 and LiDAR for Automated Individual Tree Crown Delineation: A Comparative Evaluation of Prompting Methods"
+authors = [
+    {name = "Yun Zhu"},
+    {name = "William Locke", email = "williamlockeiv@gmail.com"},
+    {name = "Jingyi Yuan"},
+    {name = "Yunqian Zhang"},
+    {name = "Qin Ma"},
+    {name = "Lu Liang", email = "lianglu@berkeley.edu"}
+]
+maintainers = [
+    {name = "William Locke", email = "williamlockeiv@gmail.com"}
+]
+readme = "README.md"
+version = "1.0"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.10.0"
+keywords = ["ITC", "Individual Tree Crown", "Delineation", "Lidar"]
+dependencies = [
+    "geopandas",
+    "laspy",
+    "matplotlib",
+    "numpy",
+    "os",
+    "pandas",
+    "pickle",
+    "rasterio",
+    "scipy",
+    "sklearn",
+    "torch",
+    "supervision",
+    "xml"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Researchers"
+]
+
+[project.urls]
+Repository = "https://github.com/lu-liang-geo/Sam-Lidar.git"

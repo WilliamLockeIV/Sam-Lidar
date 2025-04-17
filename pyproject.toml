@@ -29,7 +29,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
-    "rasterio",
+    "rasterio==1.4.3",
     "scipy",
     "scikit-learn",
     "torch",

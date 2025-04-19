@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 
 
-def rasterize_lidar(las, filename, boxes=None, classifications={'Ground':0,'High Vegetation':1}, 
+def rasterize_lidar(las, boxes=None, classifications={'Ground':0,'High Vegetation':1}, 
                     img_size=(400,400)):
     '''
     Indexes LiDAR points by the pixel they fall into in the corresponding RGB raster image. LiDAR
@@ -25,7 +25,6 @@ def rasterize_lidar(las, filename, boxes=None, classifications={'Ground':0,'High
 
     params:
         las: Laspy object of LiDAR point cloud
-        filename (str): laz / tiff filename minus the extension
         boxes (np.array): T x 4 array of [x0,y0,x1,y1] bounding boxes, where T is the
                           total number of boxes (trees).
         classifications (dict): Dictionary of LiDAR classifications. Must include 

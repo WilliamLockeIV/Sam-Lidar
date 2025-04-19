@@ -9,8 +9,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 
 
-def rasterize_lidar(lidar_folder, rgb_folder, filename, boxes=None, 
-                    classifications={'Ground':0,'High Vegetation':1}, img_size=(400,400)):
+def rasterize_lidar(las, filename, boxes=None, classifications={'Ground':0,'High Vegetation':1}, 
+                    img_size=(400,400)):
     '''
     Indexes LiDAR points by the pixel they fall into in the corresponding RGB raster image. LiDAR
     points classified as "High Vegetation" are then further labeled according to which tree(s)
@@ -24,8 +24,7 @@ def rasterize_lidar(lidar_folder, rgb_folder, filename, boxes=None,
     from both the ground and a tree, only the tree label is included.)
 
     params:
-        lidar_folder (str): Path to folder containing laz files
-        rgb_folder (str): Path to folder containing tiff files
+        las: Laspy object of LiDAR point cloud
         filename (str): laz / tiff filename minus the extension
         boxes (np.array): T x 4 array of [x0,y0,x1,y1] bounding boxes, where T is the
                           total number of boxes (trees).
@@ -44,9 +43,6 @@ def rasterize_lidar(lidar_folder, rgb_folder, filename, boxes=None,
                      there are no boxes to label individual trees, T = 1 and all pixels
                      are 1 if they are classified as "High Vegetation" and 0 otherwise.
     '''
-
-    # Read Lidar file
-    las = laspy.read(os.path.join(lidar_folder, f'{filename}.laz'))
 
     # LiDAR to DataFrame
     points = np.vstack((las.x, las.y, las.classification)).transpose()

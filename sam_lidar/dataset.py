@@ -31,7 +31,8 @@ class NEONTreeDataset(torch.utils.data.Dataset):
         annotated_image (dict) with keys:
             basename: string of image name (without extension)
             rgb: HxWxC ndarray of RGB channels
-            tif: rasterio image file (useful for processing lidar)
+            tif: closed rasterio dataset object, can be used to connect rgb
+                 pixels with real-world coordinates
             lidar: las file of LiDAR cloud
             boxes: Nx4 ndarray of ground truth bounding boxes in XYXY format
             poly: NxHxW ndarray of ground truth masks

@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 
 
-def rasterize_lidar(las, boxes=None, classifications={'Ground':0,'High Vegetation':1}, 
+def rasterize_lidar(las, tif, boxes=None, classifications={'Ground':0,'High Vegetation':1}, 
                     img_size=(400,400)):
     '''
     Indexes LiDAR points by the pixel they fall into in the corresponding RGB raster image. LiDAR
@@ -25,6 +25,7 @@ def rasterize_lidar(las, boxes=None, classifications={'Ground':0,'High Vegetatio
 
     params:
         las: Laspy object of LiDAR point cloud
+        tif: Rasterio image object of .tif image file
         boxes (np.array): T x 4 array of [x0,y0,x1,y1] bounding boxes, where T is the
                           total number of boxes (trees).
         classifications (dict): Dictionary of LiDAR classifications. Must include 
@@ -49,11 +50,10 @@ def rasterize_lidar(las, boxes=None, classifications={'Ground':0,'High Vegetatio
     df['classification'] == classifications['High Vegetation']
 
     # Align Lidar coordinates with tiff indices
-    with rasterio.open(os.path.join(rgb_folder, filename+'.tif')) as rast_img:
-        left, bottom, right, top = rast_img.bounds
-        df = df[df['x'].between(left, right) & df['y'].between(bottom, top)]
-        # Get pixel coordinates for each point.
-        pixels = [rast_img.index(x,y) for x,y in zip(df['x'], df['y'])]
+    left, bottom, right, top = tif.bounds
+    df = df[df['x'].between(left, right) & df['y'].between(bottom, top)]
+    # Get pixel coordinates for each point.
+    pixels = [tif.index(x,y) for x,y in zip(df['x'], df['y'])]
     df[['y_bin','x_bin']] = pixels
     df = df.astype({'x_bin':'int', 'y_bin':'int', 'classification':'int'})
 

@@ -29,10 +29,12 @@ class NEONTreeDataset(torch.utils.data.Dataset):
     '''
     returns
         annotated_image (dict) with keys:
+            basename: string of image name (without extension)
             rgb: HxWxC ndarray of RGB channels
-            lidar: HxWxC ndarray of multi channels
-            prompt (if prompt_path specified): Nx4 ndarray of prompt bounding boxes in XYXY format
-            annotation: Nx4 ndarray of ground truth bounding boxes in XYXY format
+            tif: rasterio image file (useful for processing lidar)
+            lidar: las file of LiDAR cloud
+            boxes: Nx4 ndarray of ground truth bounding boxes in XYXY format
+            poly: NxHxW ndarray of ground truth masks
     '''
     basename = self.basenames[idx]
 
@@ -78,7 +80,7 @@ class NEONTreeDataset(torch.utils.data.Dataset):
             polygons.append(np.array(pixels, dtype='int'))
     polygons = np.array([polygon_to_mask(poly, (width,height)) for poly in polygons], dtype=bool)
 
-    annotated_image = {'basename': basename, 'rgb':rgb_img, 'lidar':las, 'box':boxes, 'poly':polygons}
+    annotated_image = {'basename': basename, 'rgb':rgb_img, 'tif':rast_img, 'lidar':las, 'box':boxes, 'poly':polygons}
     
     return annotated_image
 

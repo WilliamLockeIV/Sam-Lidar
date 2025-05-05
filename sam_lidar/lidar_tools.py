@@ -215,3 +215,187 @@ def sample_points(coordinates, labels, pos_samples, neg_samples,
     sample_labels = np.stack(sample_labels)
 
     return sample_coordinates, sample_labels
+
+
+def show_as_mask(img, detections, coordinates, labels, ax=None,
+                 show_positive=True, show_negative=False, show_boxes=False,
+                 img_size=(400,400), fig_size=(5,5), neg_opacity=1.0, title=None,
+                 save=False, output_folder='/content'):
+    '''
+    Display rasterized LiDAR points as mask, with one pixel per one point. Useful for visualizing images
+    with large numbers of LiDAR points. Can visualize collectively labeled or individually labeled points.
+
+    params:
+        img (array): RGB image as array
+        detections (sv.Detections): Annotations for image put into Supervision Detections object
+        coordinates (ndarray): 1 x N x 2 array or T x N x 2 array of X,Y coordinates; if coordinates were
+                               sampled using "sample_points", then T is the number of labeled trees
+        labels (ndarray): T x N array of binary labels, where T is the number of labeled trees (T = 1 for
+                          collective labels)
+        ax (matplotlib Axes): If embedding this image in a larger matplotlib figure, pass an axis of that
+                              figure as "ax". This will return the image as an Axes object and allow it
+                              to be embedded in the larger figure.
+        show_positive (bool): If True, show the positively labeled points (trees)
+        show_negative (bool): If True, show the negatively labeled points (background)
+        show_boxes (bool): If True, show the bounding boxes around trees
+        img_size (tuple): Image size in pixels (H x W)
+        fig_size (tuple): Display size in inches (W x H)
+        neg_opacity (float): Opacity of negative points, value between 0 and 1
+        title (str): Optional title to show on image. If title is provided as save is True, title will
+                     also be the name of the saved file.
+        save (bool): If True, save the image as png. If title is not None, will use title for save name,
+                     otherwise will save as "lidar_mask.png".
+        output_folder (str): Path to the folder to save image
+
+    returns:
+        None. Displays and optionally saves image with masks overlaid.
+    '''
+    img = img[:,:,::-1]
+
+    # T = 1 for collective points, otherwise the number of labeled trees
+    num_labels = len(labels)
+
+    # Broadcast coordinates to T x N x 2 if not already input as such
+    original_shape = coordinates.shape
+    coordinates = np.broadcast_to(coordinates, (num_labels, coordinates.shape[1], coordinates.shape[2]))
+
+    if show_positive:
+        # Show tree points
+        pos_mask = np.full((num_labels, img_size[0], img_size[1]), False)
+        for i in range(num_labels):
+            mask_index = labels[i].nonzero()[0]
+            mask_coords = coordinates[i, mask_index]
+            pos_mask[i,mask_coords[:,1],mask_coords[:,0]] = True
+        pos_detections = sv.Detections(xyxy=detections.xyxy, mask=pos_mask, class_id=detections.class_id)
+        if len(pos_detections) == 1:
+          pos_annotator = sv.MaskAnnotator(color=sv.Color.BLACK, opacity=1)
+        else:
+          pos_annotator = sv.MaskAnnotator(color_lookup=sv.ColorLookup.INDEX, opacity=1)
+        img = pos_annotator.annotate(scene=img.copy(), detections=pos_detections)
+
+    if show_negative:
+        # Show background points
+        neg_mask = np.full((original_shape[0], img_size[0], img_size[1]), False)
+        if original_shape[0] == 1:
+            labels = np.max(labels, axis=0)[np.newaxis]
+        for i in range(len(neg_mask)):
+            mask_index = (labels[i]==0).nonzero()[0]
+            mask_coords = coordinates[i, mask_index]
+            neg_mask[i,mask_coords[:,1],mask_coords[:,0]] = True
+        # Background points are always white for mask visualization
+        neg_detections = sv.Detections(xyxy=detections.xyxy, mask=neg_mask, class_id=detections.class_id)
+        neg_annotator = sv.MaskAnnotator(color=sv.Color.WHITE, opacity=neg_opacity)
+        img = neg_annotator.annotate(scene=img.copy(), detections=neg_detections)
+
+    if show_boxes:
+        # Show boxes
+        box_annotator = sv.BoxAnnotator(thickness=1, color=sv.Color.RED)
+        img = box_annotator.annotate(scene=img.copy(), detections=detections)
+
+    # Display figure, optionally title and save
+    return_ax = True
+    if ax is None:
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=fig_size)
+        return_ax = False
+    ax.axis('off')
+    ax.imshow(img[:,:,::-1])
+
+    if return_ax:
+        return ax
+
+    if title:
+        ax.set_title(title)
+    plt.tight_layout()
+    if save:
+        if title:
+            plt.savefig(os.path.join(output_folder, title+'.png'))
+        else:
+            plt.savefig(os.path.join(output_folder, 'lidar_mask.png'))
+    plt.show()
+
+
+def show_as_points(img, detections, coordinates, labels, ax=None,
+                   show_positive=True, show_negative=False, show_boxes=False,
+                   img_size=(400,400), fig_size=(5,5), marker_size=75, title=None,
+                   save=False, output_folder='/content'):
+    '''
+    Display rasterized LiDAR points as dots, larger than a pixel. Useful for visualizing images with few
+    LiDAR points. Can visualize collectively labeled or individually labeled points, however multiple trees
+    with individually labeled points can become visually confusing (especially if showing negative points).
+    Alternatively, can visualize each tree's points in a separate image using the code below:
+
+    for i in range(len(labels)):
+        show_as_points(img, coordinates[i:i+1], labels[i:i+1])
+
+    params:
+        img (array): RGB image as array
+        detections (sv.Detections): Annotations for image put into Supervision Detections object
+        coordinates (ndarray): 1 x N x 2 array or T x N x 2 array of X,Y coordinates; if coordinates were
+                               sampled using "sample_points", then T is the number of labeled trees
+        labels (ndarray): T x N array of binary labels, where T is the number of labeled trees (T = 1 for
+                          collective labels)
+        ax (matplotlib Axes): If embedding this image in a larger matplotlib figure, pass an axis of that
+                              figure as "ax". This will return the image as an Axes object and allow it
+                              to be embedded in the larger figure.
+        show_positive (bool): If True, show the positively labeled points (trees)
+        show_negative (bool): If True, show the negatively labeled points (background)
+        show_boxes (bool): If True, show the bounding boxes around trees
+        marker_size (int): Size of dots to display for LiDAR points
+        img_size (tuple): Image size in pixels (H x W)
+        fig_size (tuple): Display size in inches (W x H)
+        title (str): Optional title to show on image. If title is provided as save is True, title will
+                     also be the name of the saved file.
+        save (bool): If True, save the image as png. If title is not None, will use title for save name,
+                     otherwise will save as "lidar_mask.png".
+        output_folder (str): Path to the folder to save image
+
+        returns:
+            None. Displays and optionally saves image with points overlaid.
+    '''
+    if show_boxes:
+        # Show boxes  (we use color BLUE because it will be reversed to RED later)
+        box_annotator = sv.BoxAnnotator(thickness=2, color=sv.Color.BLUE)
+        img = box_annotator.annotate(scene=img.copy(), detections=detections)
+
+    # Create figure, display image
+    return_ax = True
+    if ax is None:
+      fig, ax = plt.subplots(nrows=1, ncols=1, figsize=fig_size)
+      return_ax = False
+    ax.axis('off')
+    ax.imshow(img)
+
+    # T = 1 for collective points, otherwise the number of labeled trees
+    num_labels = len(labels)
+
+    # Broadcast coordinates to T x N x 2 if not already input as such
+    original_shape = coordinates.shape
+    coordinates = np.broadcast_to(coordinates, (num_labels, coordinates.shape[1], coordinates.shape[2]))
+
+    if show_positive:
+        # Show tree points
+        for i in range(num_labels):
+            pos_index = labels[i].nonzero()[0]
+            pos_coord = coordinates[i, pos_index]
+            ax.scatter(pos_coord[:,0], pos_coord[:,1], color='black', marker='.', s=marker_size, edgecolor='black', linewidth=1)
+
+    if show_negative:
+        # Show background points
+        for i in range(num_labels):
+            neg_index = (labels[i]==0).nonzero()[0]
+            neg_coord = coordinates[i, neg_index]
+            ax.scatter(neg_coord[:,0], neg_coord[:,1], color='white', marker='.', s=marker_size, edgecolor='white', linewidth=1)
+
+    if return_ax:
+      return ax
+
+    # Display figure, optionally title and save
+    if title:
+        plt.title(title)
+    plt.tight_layout()
+    if save:
+        if title:
+            plt.savefig(os.path.join(output_folder, title+'.png'))
+        else:
+            plt.savefig(os.path.join(output_folder, 'lidar_points.png'))
+    plt.show()

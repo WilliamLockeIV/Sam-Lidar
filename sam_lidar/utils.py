@@ -187,8 +187,8 @@ def shapefile_to_mask(rgb_path, shape_path):
     '''
     masks = []
     with rasterio.open(rgb_path) as rast_img:   
-        height = rast_img.shape[1]
-        width = rast_img.shape[2]
+        height = rast_img.shape[0]
+        width = rast_img.shape[1]
         # Open corresponding shapefile, convert to image's CRS, clip to image bounds
         shapes = gpd.read_file(shape_path)
         shapes = shapes.to_crs(rast_img.crs)

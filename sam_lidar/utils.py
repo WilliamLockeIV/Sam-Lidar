@@ -38,7 +38,7 @@ def intersection_over_minimum_area(boxes):
     return inter_over_min_area
 
 
-def custom_nms(detections, threshold = 0.75, ignore_categories = False):
+def custom_nms(detections, threshold = 0.75, ignore_categories = True):
     '''
     Like regular Non-Max Suppression, but instead of intersection over union (IoU), measures
     intersection over the area of the smaller box. This means if e.g. a smaller box is completely
@@ -51,7 +51,7 @@ def custom_nms(detections, threshold = 0.75, ignore_categories = False):
          threshold:  The percent of a given box's total area that is contained within another box
                      to activate custom non-max suppression.
 
-        ignore_categories:  If False, external_box_suppression will only be applied to boxes with the
+        ignore_categories:  If False, custom Non-Max Suppression will only be applied to boxes with the
                             same label, otherwise will be applied between all boxes regardless of label.
 
     returns:

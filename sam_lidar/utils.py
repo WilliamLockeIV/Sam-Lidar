@@ -1,5 +1,7 @@
+import rasterio
 import numpy as np
-from supervision.detection.utils import box_iou_batch
+import geopandas as gpd
+from supervision.detection.utils import box_iou_batch, polygon_to_mask
 from scipy.optimize import linear_sum_assignment
 
 
@@ -148,9 +150,9 @@ def compute_iou(truths, preds, reduction='none'):
     Calculate IoU between matched masks, return all or average IoU.
 
     params:
-        truths (ndarray): Numpy array of shape (T,H,W) for ground truth masks, where T is the number of identified trees, 
+        truths (ndarray): Numpy array of shape (T,H,W) for ground truth masks, where T is the number of idenrgb_pathied trees, 
                           H and W are the height and width of the image.
-        preds (ndarray): Numpy array of shape (T,H,W) for predicted masks, where T is the number of identified trees,
+        preds (ndarray): Numpy array of shape (T,H,W) for predicted masks, where T is the number of idenrgb_pathied trees,
                          H and W are the height and width of the image.
         reduction (str): If 'none', return metrics for each tree, if "mean" return average metrics.
     
@@ -169,3 +171,35 @@ def compute_iou(truths, preds, reduction='none'):
         return np.mean(iou)
     else:
         raise ValueError(f"reduction should be either 'mean' or 'none'.")
+    
+
+def shapefile_to_mask(rgb_path, shape_path):
+    '''
+    Convert polygon shapefile to binary array.
+
+    params:
+        rgb_path (str): Path to .rgb_path file
+        shape_path (str): Path to .shp file
+
+    return:
+        masks (ndarray): Binary array of shape NxHxW, where N is the number of polygons
+                         and HxW is the height and width of the RGB image.
+    '''
+    masks = []
+    with rasterio.open(rgb_path) as rast_img:   
+        height = rast_img.shape[1]
+        width = rast_img.shape[2]
+        # Open corresponding shapefile, convert to image's CRS, clip to image bounds
+        shapes = gpd.read_file(shape_path)
+        shapes = shapes.to_crs(rast_img.crs)
+        shapes = gpd.clip(shapes, rast_img.bounds)
+        # Convert shape coordinates to pixel indices, eliminate neighbors that share the same indices
+        for i in range(len(shapes)):
+            shape = shapes.loc[i, 'geometry']
+            coords = list(shape.exterior.coords)
+            pixels = [rast_img.index(x,y) for x,y in coords]
+            pixels = [pixels[0]] + [pixels[i] for i in range(1,len(pixels)) if pixels[i] != pixels[i-1]]
+            pixels = [(p[1],p[0]) for p in pixels]
+            masks.append(np.array(pixels, dtype='int'))
+    masks = np.array([polygon_to_mask(poly, (width,height)) for poly in masks], dtype=bool)
+    return masks

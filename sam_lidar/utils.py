@@ -150,9 +150,9 @@ def compute_iou(truths, preds, reduction='none'):
     Calculate IoU between matched masks, return all or average IoU.
 
     params:
-        truths (ndarray): Numpy array of shape (T,H,W) for ground truth masks, where T is the number of idenrgb_pathied trees, 
+        truths (ndarray): Numpy array of shape (T,H,W) for ground truth masks, where T is the number of identified trees, 
                           H and W are the height and width of the image.
-        preds (ndarray): Numpy array of shape (T,H,W) for predicted masks, where T is the number of idenrgb_pathied trees,
+        preds (ndarray): Numpy array of shape (T,H,W) for predicted masks, where T is the number of identified trees,
                          H and W are the height and width of the image.
         reduction (str): If 'none', return metrics for each tree, if "mean" return average metrics.
     

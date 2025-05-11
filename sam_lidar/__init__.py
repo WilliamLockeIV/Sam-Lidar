@@ -5,5 +5,5 @@ from .utils import custom_nms
 from .metrics import (
     per_tree_metrics,
     per_tree_std,
-    box_mask_metrics
+    per_box_metrics
 )

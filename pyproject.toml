@@ -24,21 +24,36 @@ requires-python = ">=3.10.0"
 keywords = ["ITC", "Individual Tree Crown", "Delineation", "Lidar"]
 dependencies = [
     "geopandas",
+    "IPython",
     "laspy",
     "lazrs",
     "matplotlib",
     "numpy",
     "pandas",
-    "rasterio==1.4.3",
-    "scipy",
+    "rasterio",
     "scikit-learn",
-    "torch",
-    "supervision"
+    "scipy",
+    "supervision",
+    "torch"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Intended Audience :: Researchers"
 ]
+
+[project.optional-dependencies]
+deepforest = [
+    pytorch_lightning,
+    omegaconf,
+    rtree,
+    slidingwindow,
+    xmltodict    
+]
+detectree2 = [
+    "fiona",
+    "fvcore",
+]
+sam2 = ["hydra-core"]
 
 [project.urls]
 Repository = "https://github.com/lu-liang-geo/Sam-Lidar.git"

@@ -43,11 +43,11 @@ classifiers = [
 
 [project.optional-dependencies]
 deepforest = [
-    pytorch_lightning,
-    omegaconf,
-    rtree,
-    slidingwindow,
-    xmltodict    
+    "pytorch_lightning",
+    "omegaconf",
+    "rtree",
+    "slidingwindow",
+    "xmltodict"    
 ]
 detectree2 = [
     "fiona",

@@ -43,7 +43,7 @@ classifiers = [
 
 [project.optional-dependencies]
 deepforest = [
-    "pytorch_lightning",
+    "pytorch_lightning>1.5.8",
     "omegaconf",
     "rtree",
     "slidingwindow",

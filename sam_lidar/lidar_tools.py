@@ -1,11 +1,8 @@
 import os
-import laspy
-import rasterio
 import numpy as np
 import pandas as pd
 import supervision as sv
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 
 

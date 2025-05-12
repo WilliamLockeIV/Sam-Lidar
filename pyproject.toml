@@ -28,13 +28,13 @@ dependencies = [
     "laspy",
     "lazrs",
     "matplotlib",
-    "numpy",
+    "numpy>=1.24.4",
     "pandas",
-    "rasterio",
+    "rasterio>=1.4.0",
     "scikit-learn",
-    "scipy",
+    "scipy>1.5.1",
     "supervision",
-    "torch"
+    "torch>=2.5.1"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -50,10 +50,10 @@ deepforest = [
     "xmltodict"    
 ]
 detectree2 = [
-    "fiona",
-    "fvcore",
+    "fiona>=1.9.6",
+    "fvcore>=0.1.5,<0.1.6",
 ]
-sam2 = ["hydra-core"]
+sam2 = ["hydra-core>=1.3.2"]
 
 [project.urls]
 Repository = "https://github.com/lu-liang-geo/Sam-Lidar.git"

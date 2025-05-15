@@ -6,7 +6,7 @@ In the paper and code, we test the efficacy of the pre-trained, promptable Segme
 ![Example Delineation](visualizations/Example%20Delineation.jpg)
 
 ## Running the Code
-The Jupyter notebook in this repository, [Paper Methods.ipynb](notebooks/Paper%20Methods.ipynb) allows you to rerun the experiments and visualize the results. It can be run in Google Colab (preferably with GPU support and High RAM for speed increases) by pressing the "Open in Colab" button, without requiring downloading this repository or the notebook itself. If you would like to save any changes you make to the notebook, you will need to either download the .ipynb file or create a copy in Colab.
+The Jupyter notebook in this repository, [Paper Methods.ipynb](notebooks/Paper_Methods.ipynb) allows you to rerun the experiments and visualize the results. It can be run in Google Colab (preferably with GPU support and High RAM for speed increases) by pressing the "Open in Colab" button, without requiring downloading this repository or the notebook itself. If you would like to save any changes you make to the notebook, you will need to either download the .ipynb file or create a copy in Colab.
 
 We are working on creating an environment that will allow you to run the notebook and code locally. We will include instructions here when that is available.
 
@@ -30,7 +30,7 @@ Finally, we feed the images and prompts to SAM 2, which outputs delineations for
 
 ![SAM 2 delineations](visualizations/ITC%20Delineations.jpg)
 
-To see more examples and read about the accuracy of these different prompting methods, please read the full paper and run the associated [Colab Notebook](notebooks/Paper%20Methods.ipynb).
+To see more examples and read about the accuracy of these different prompting methods, please read the full paper and run the associated [Colab Notebook](notebooks/Paper_Methods.ipynb).
 
 ## References
 

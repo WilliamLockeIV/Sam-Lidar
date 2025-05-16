@@ -286,7 +286,7 @@ def show_as_mask(img, detections, coordinates, labels, ax=None,
 
     if show_boxes:
         # Show boxes
-        box_annotator = sv.BoxAnnotator(thickness=1, color=sv.Color.RED)
+        box_annotator = sv.BoxAnnotator(thickness=1, color=sv.Color.BLUE)
         img = box_annotator.annotate(scene=img.copy(), detections=detections)
 
     # Display figure, optionally title and save
@@ -350,8 +350,8 @@ def show_as_points(img, detections, coordinates, labels, ax=None,
             None. Displays and optionally saves image with points overlaid.
     '''
     if show_boxes:
-        # Show boxes  (we use color BLUE because it will be reversed to RED later)
-        box_annotator = sv.BoxAnnotator(thickness=2, color=sv.Color.BLUE)
+        # Show boxes  (we use color RED because it will be reversed to BLUE later)
+        box_annotator = sv.BoxAnnotator(thickness=1, color=sv.Color.RED)
         img = box_annotator.annotate(scene=img.copy(), detections=detections)
 
     # Create figure, display image

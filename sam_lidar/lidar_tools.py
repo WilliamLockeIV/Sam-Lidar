@@ -214,10 +214,10 @@ def sample_points(coordinates, labels, pos_samples, neg_samples,
     return sample_coordinates, sample_labels
 
 
-def show_as_mask(img, detections, coordinates, labels, ax=None,
-                 show_positive=True, show_negative=False, show_boxes=False,
-                 img_size=(400,400), fig_size=(5,5), neg_opacity=1.0, thickness=2,
-                 title=None, save=False, output_folder='/content'):
+def show_as_mask(img, detections, coordinates, labels, ax=None, img_size=(400,400),
+                 show_positive=True, show_negative=False, neg_opacity=1.0,
+                 show_boxes=False, box_color=sv.Color.BLACK, thickness=2,
+                 fig_size=(5,5), title=None, save=False, output_folder='/content'):
     '''
     Display rasterized LiDAR points as mask, with one pixel per one point. Useful for visualizing images
     with large numbers of LiDAR points. Can visualize collectively labeled or individually labeled points.
@@ -232,13 +232,14 @@ def show_as_mask(img, detections, coordinates, labels, ax=None,
         ax (matplotlib Axes): If embedding this image in a larger matplotlib figure, pass an axis of that
                               figure as "ax". This will return the image as an Axes object and allow it
                               to be embedded in the larger figure.
+        img_size (tuple): Image size in pixels (H x W)
         show_positive (bool): If True, show the positively labeled points (trees)
         show_negative (bool): If True, show the negatively labeled points (background)
-        show_boxes (bool): If True, show the bounding boxes around trees
-        img_size (tuple): Image size in pixels (H x W)
-        fig_size (tuple): Display size in inches (W x H)
         neg_opacity (float): Opacity of negative points, value between 0 and 1
+        show_boxes (bool): If True, show the bounding boxes around trees
+        box_color (sv.Color): Color of bounding boxes is show_boxes is True        
         thickness (int): Thickness of bounding boxes if show_boxes is True
+        fig_size (tuple): Display size in inches (W x H)
         title (str): Optional title to show on image. If title is provided as save is True, title will
                      also be the name of the saved file.
         save (bool): If True, save the image as png. If title is not None, will use title for save name,
@@ -287,7 +288,7 @@ def show_as_mask(img, detections, coordinates, labels, ax=None,
 
     if show_boxes:
         # Show boxes
-        box_annotator = sv.BoxAnnotator(thickness=thickness, color=sv.Color.BLUE)
+        box_annotator = sv.BoxAnnotator(thickness=thickness, color=box_color)
         img = box_annotator.annotate(scene=img.copy(), detections=detections)
 
     # Display figure, optionally title and save
@@ -312,10 +313,10 @@ def show_as_mask(img, detections, coordinates, labels, ax=None,
     plt.show()
 
 
-def show_as_points(img, detections, coordinates, labels, ax=None,
-                   show_positive=True, show_negative=False, show_boxes=False,
-                   img_size=(400,400), fig_size=(5,5), marker_size=25, thickness=2,
-                   title=None, save=False, output_folder='/content'):
+def show_as_points(img, detections, coordinates, labels, ax=None, img_size=(400,400),
+                   show_positive=True, show_negative=False, marker_size=25,
+                   show_boxes=False, box_color=sv.Color.BLACK, thickness=2,
+                   fig_size=(5,5), title=None, save=False, output_folder='/content'):
     '''
     Display rasterized LiDAR points as dots, larger than a pixel. Useful for visualizing images with few
     LiDAR points. Can visualize collectively labeled or individually labeled points, however multiple trees
@@ -335,12 +336,13 @@ def show_as_points(img, detections, coordinates, labels, ax=None,
         ax (matplotlib Axes): If embedding this image in a larger matplotlib figure, pass an axis of that
                               figure as "ax". This will return the image as an Axes object and allow it
                               to be embedded in the larger figure.
+        img_size (tuple): Image size in pixels (H x W)
         show_positive (bool): If True, show the positively labeled points (trees)
         show_negative (bool): If True, show the negatively labeled points (background)
-        show_boxes (bool): If True, show the bounding boxes around trees
         marker_size (int): Size of dots to display for LiDAR points
+        show_boxes (bool): If True, show the bounding boxes around trees
+        box_color (sv.Color): Color of bounding boxes if show_boxes is True
         thickness (int): Thickness of bounding boxes if show_boxes is True
-        img_size (tuple): Image size in pixels (H x W)
         fig_size (tuple): Display size in inches (W x H)
         title (str): Optional title to show on image. If title is provided as save is True, title will
                      also be the name of the saved file.
@@ -353,7 +355,7 @@ def show_as_points(img, detections, coordinates, labels, ax=None,
     '''
     if show_boxes:
         # Show boxes  (we use color RED because it will be reversed to BLUE later)
-        box_annotator = sv.BoxAnnotator(thickness=thickness, color=sv.Color.RED)
+        box_annotator = sv.BoxAnnotator(thickness=thickness, color=box_color)
         img = box_annotator.annotate(scene=img.copy(), detections=detections)
 
     # Create figure, display image

@@ -29,6 +29,7 @@ dependencies = [
     "lazrs",
     "matplotlib",
     "numpy>=1.24.4",
+    "opencv",
     "pandas",
     "rasterio>=1.4.0",
     "scikit-learn",

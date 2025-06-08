@@ -48,7 +48,8 @@ deepforest = [
     "omegaconf",
     "rtree",
     "slidingwindow",
-    "xmltodict"    
+    "xmltodict",
+    "albumentations<2"    
 ]
 detectree2 = [
     "fiona>=1.9.6",

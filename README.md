@@ -11,7 +11,7 @@ The Jupyter notebook in this repository, [Paper Methods.ipynb](notebooks/Paper_M
 We are working on creating an environment that will allow you to run the notebook and code locally. We will include instructions here when that is available.
 
 ## Data
-The data used in this paper is adapted from the NeonTreeEvaluation dataset (Weinstein et al., 2021). We took 18 RGB images from this dataset, with accompanying LiDAR point clouds and hand-drawn bounding boxes around individual trees, and supplemented them with our own hand-drawn polygons more precisely delineating each individual tree crown. This subset of images with our manual delineations can be downloaded at Zenodo (https://doi.org/10.5281/zenodo.15354456).
+The data used in this paper is adapted from the NeonTreeEvaluation dataset (Weinstein et al., 2021). We took 18 RGB images from this dataset, with accompanying LiDAR point clouds and hand-drawn bounding boxes around individual trees, and supplemented them with our own hand-drawn polygons more precisely delineating each individual tree crown. This subset of images with our manual delineations can be downloaded at Zenodo (https://doi.org/10.5281/zenodo.15133613).
 
 ## Methods
 As described in the paper in greater detail, we use Meta's SAM 2 model to segment tree crowns from bounding box and LiDAR prompts. We do this by first taking the RGB image of a plot of trees, as below.

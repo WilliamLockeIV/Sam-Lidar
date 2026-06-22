@@ -34,7 +34,7 @@ dependencies = [
     "rasterio>=1.4.0",
     "scikit-learn",
     "scipy>1.5.1",
-    "supervision",
+    "supervision<0.26",
     "torch>=2.5.1"
 ]
 classifiers = [
